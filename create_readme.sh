@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# Create new README.md
+cat > README.md << 'FILE_EOF'
 # Batch Processing Data Architecture Portfolio
 
 ## Overview
@@ -16,9 +20,11 @@ This is a batch-processing-based data architecture developed as a university por
 ## System Architecture
 
 ### Data Pipeline Flow
+\`\`\`
 Data Sources → [Ingestion Service] → [Raw Storage] → [Batch Processor] → [Database] → [API] → ML Application
-↓ ↓ ↓ ↓ ↓
-[Validation] [Error Handler] [Monitoring] [Backup] [Authentication]
+                     ↓                      ↓               ↓               ↓           ↓
+              [Validation]           [Error Handler]   [Monitoring]    [Backup]   [Authentication]
+\`\`\`
 
 ### Component Description
 - **Data Sources**: CSV/JSON files with bank transaction data
@@ -141,3 +147,6 @@ cat demo_validation_errors.json
 
 ## License
 This project is developed for educational purposes as part of the Data Engineering (DLMDSEDE02) course portfolio at IU International University of Applied Sciences.
+FILE_EOF
+
+echo "README.md created successfully!"

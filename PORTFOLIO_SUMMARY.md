@@ -16,9 +16,11 @@ This is a batch-processing-based data architecture developed as a university por
 ## System Architecture
 
 ### Data Pipeline Flow
+
 Data Sources → [Ingestion Service] → [Raw Storage] → [Batch Processor] → [Database] → [API] → ML Application
 ↓ ↓ ↓ ↓ ↓
 [Validation] [Error Handler] [Monitoring] [Backup] [Authentication]
+
 
 ### Component Description
 - **Data Sources**: CSV/JSON files with bank transaction data
@@ -65,41 +67,29 @@ Data Sources → [Ingestion Service] → [Raw Storage] → [Batch Processor] →
 
 ### Quick Start
 1. **Clone the repository**
-   \`\`\`bash
+   ```bash
    git clone [your-repository-url]
    cd bank-batch-pipeline
-   \`\`\`
 
-2. **Start the complete system**
-   \`\`\`bash
-   docker-compose up -d
-   \`\`\`
+   Start the complete system
 
-3. **Run individual demonstrations**
-   \`\`\`bash
-   # Test data validation framework
-   python test_validator.py
-   
-   # Test error handling system
-   python test_error_handler.py
-   
-   # Run full pipeline demonstration
-   python src/advanced_pipeline.py
-   \`\`\`
+bash
+docker-compose up -d
+Run individual demonstrations
 
-### View Generated Reports
-After running demonstrations, check the generated reports:
-\`\`\`bash
-# View performance metrics
-cat pipeline_performance_report.json
+bash
+# Test data validation framework
+python test_validator.py
 
-# Analyze error handling performance  
-cat demo_error_analysis.json
+# Test error handling system
+python test_error_handler.py
 
-# Check data validation results
-cat demo_validation_errors.json
-\`\`\`
+# Run full pipeline demonstration
+python src/advanced_pipeline.py
 
+
+
+```markdown
 ## Performance Results
 
 ### Processing Metrics
@@ -130,14 +120,15 @@ cat demo_validation_errors.json
 ## Portfolio Documentation
 
 ### Complete Documentation
-- **\`portfolio/CONCEPTION_PHASE.md\`**: Detailed architecture design and technology justification
-- **\`portfolio/PORTFOLIO_SUMMARY.md\`**: Comprehensive project documentation and results
+- **`portfolio/CONCEPTION_PHASE.md`**: Detailed architecture design and technology justification
+- **`portfolio/PORTFOLIO_SUMMARY.md`**: Comprehensive project documentation and results
 
 ### Generated Evidence
-- **Performance Reports**: \`pipeline_performance_report.json\`
-- **Error Analysis**: \`demo_error_analysis.json\`
-- **Validation Reports**: \`demo_validation_errors.json\`
-- **Execution Logs**: \`advanced_pipeline_errors.log\`
+- **Performance Reports**: `pipeline_performance_report.json`
+- **Error Analysis**: `demo_error_analysis.json`
+- **Validation Reports**: `demo_validation_errors.json`
+- **Execution Logs**: `advanced_pipeline_errors.log`
 
 ## License
 This project is developed for educational purposes as part of the Data Engineering (DLMDSEDE02) course portfolio at IU International University of Applied Sciences.
+

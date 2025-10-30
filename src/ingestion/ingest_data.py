@@ -1,30 +1,42 @@
 import pandas as pd
 import psycopg2
 import os
-from datetime import datetime
 import logging
+import time
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-class DataIngestion:
-    def __init__(self):
-        self.db_config = {
-            'host': os.getenv('DB_HOST', 'postgres'),
-            'database': os.getenv('DB_NAME', 'bankdb'),
-            'user': os.getenv('DB_USER', 'admin'),
-            'password': os.getenv('DB_PASSWORD', 'password'),
-            'port': '5432'
-        }
-        
-    def connect_db(self):
-        """Establish database connection"""
-        return psycopg2.connect(**self.db_config)
-    
-    def create_tables(self):
-        """Create necessary tables"""
-        conn = self.connect_db()
+def wait_for_postgres(host, database, user, password, max_retries=5):
+    """Wait for PostgreSQL to be ready"""
+    for i in range(max_retries):
+        try:
+            conn = psycopg2.connect(
+                host=host,
+                database=database,
+                user=user,
+                password=password,
+                port=5432
+            )
+            conn.close()
+            logger.info("✅ PostgreSQL is ready!")
+            return True
+        except Exception as e:
+            logger.warning(f"⚠️ PostgreSQL not ready yet (attempt {i+1}/{max_retries}): {e}")
+            time.sleep(5)
+    return False
+
+def create_tables():
+    """Create necessary tables in PostgreSQL"""
+    try:
+        conn = psycopg2.connect(
+            host='postgres',
+            database='bankdb',
+            user='admin',
+            password='password',
+            port=5432
+        )
         cur = conn.cursor()
         
         # Raw transactions table
@@ -41,76 +53,96 @@ class DataIngestion:
             )
         """)
         
-        # Aggregated results table
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS quarterly_analytics (
-                quarter_id VARCHAR(10),
-                customer_id VARCHAR(100),
-                total_transactions INTEGER,
-                total_amount DECIMAL(15,2),
-                avg_transaction_amount DECIMAL(15,2),
-                last_balance DECIMAL(15,2),
-                customer_segment VARCHAR(50),
-                processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (quarter_id, customer_id)
-            )
-        """)
-        
         conn.commit()
         cur.close()
         conn.close()
-        logger.info("Database tables created successfully")
-    
-    def ingest_data(self, file_path):
-        """Ingest CSV data into database"""
-        try:
-            # Read data in chunks for memory efficiency
-            chunk_size = 50000
-            conn = self.connect_db()
-            cur = conn.cursor()
+        logger.info("✅ Database tables created successfully")
+        
+    except Exception as e:
+        logger.error(f"❌ Error creating tables: {e}")
+        raise
+
+def ingest_data():
+    """Ingest CSV data into PostgreSQL"""
+    try:
+        file_path = '/app/data/bank_transactions.csv'
+        logger.info(f"📂 Starting data ingestion from {file_path}")
+        
+        # First, let's check if the file exists and read a small sample
+        sample_df = pd.read_csv(file_path, nrows=5)
+        logger.info(f"📊 File columns: {sample_df.columns.tolist()}")
+        logger.info(f"📊 Sample data shape: {sample_df.shape}")
+        
+        # Read data in chunks for memory efficiency
+        chunk_size = 10000
+        total_rows = 0
+        
+        conn = psycopg2.connect(
+            host='postgres',
+            database='bankdb',
+            user='admin',
+            password='password',
+            port=5432
+        )
+        cur = conn.cursor()
+        
+        for chunk_num, chunk in enumerate(pd.read_csv(file_path, chunksize=chunk_size)):
+            # Clean the data
+            chunk = chunk.fillna({
+                'CustAccountBalance': 0,
+                'TransactionAmount': 0,
+                'TransactionTime': 0
+            })
             
-            logger.info(f"Starting data ingestion from {file_path}")
+            # Prepare data for insertion
+            data_tuples = []
+            for i, (_, row) in enumerate(chunk.iterrows()):
+                # Create customer ID if missing
+                customer_id = f"cust_{chunk_num}_{i}"
+                
+                # Handle date conversion
+                transaction_date = None
+                try:
+                    transaction_date = pd.to_datetime(row['TransactionDate']).date()
+                except:
+                    pass
+                
+                data_tuples.append((
+                    customer_id,
+                    str(row.get('CustLocation', 'Unknown'))[:199],  # Limit length
+                    float(row.get('CustAccountBalance', 0)),
+                    transaction_date,
+                    int(row.get('TransactionTime', 0)),
+                    float(row.get('TransactionAmount', 0))
+                ))
             
-            for chunk_num, chunk in enumerate(pd.read_csv(file_path, chunksize=chunk_size)):
-                # Convert timestamp - handle different date formats
-                chunk['TransactionDate'] = pd.to_datetime(chunk['TransactionDate'], errors='coerce')
-                
-                # Prepare data for insertion
-                data_tuples = []
-                for i, (_, row) in enumerate(chunk.iterrows()):
-                    # Handle missing CustomerID
-                    customer_id = row.get('CustomerID', f"cust_{chunk_num}_{i}")
-                    
-                    data_tuples.append((
-                        str(customer_id),
-                        str(row.get('CustLocation', 'Unknown')),
-                        float(row.get('CustAccountBalance', 0)),
-                        row['TransactionDate'].date() if pd.notna(row.get('TransactionDate')) else None,
-                        int(row.get('TransactionTime', 0)),
-                        float(row.get('TransactionAmount', 0))
-                    ))
-                
-                # Insert data
-                insert_query = """
-                    INSERT INTO raw_transactions 
-                    (customer_id, customer_location, account_balance, transaction_date, transaction_time, transaction_amount)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                """
-                
-                cur.executemany(insert_query, data_tuples)
-                conn.commit()
-                
-                logger.info(f"Processed chunk {chunk_num + 1}: {len(data_tuples)} records")
+            # Insert data
+            insert_query = """
+                INSERT INTO raw_transactions 
+                (customer_id, customer_location, account_balance, transaction_date, transaction_time, transaction_amount)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """
             
-            cur.close()
-            conn.close()
-            logger.info("Data ingestion completed successfully")
+            cur.executemany(insert_query, data_tuples)
+            conn.commit()
             
-        except Exception as e:
-            logger.error(f"Error during data ingestion: {str(e)}")
-            raise
+            total_rows += len(data_tuples)
+            logger.info(f"✅ Processed chunk {chunk_num + 1}: {len(data_tuples)} records (Total: {total_rows})")
+        
+        cur.close()
+        conn.close()
+        logger.info(f"🎉 Data ingestion completed! Total records: {total_rows}")
+        
+    except Exception as e:
+        logger.error(f"❌ Error during data ingestion: {e}")
+        raise
 
 if __name__ == "__main__":
-    ingestion = DataIngestion()
-    ingestion.create_tables()
-    ingestion.ingest_data('/app/data/bank_transactions.csv')
+    logger.info("🚀 Starting bank data ingestion pipeline...")
+    
+    # Wait for PostgreSQL to be ready
+    if wait_for_postgres('postgres', 'bankdb', 'admin', 'password'):
+        create_tables()
+        ingest_data()
+    else:
+        logger.error("💥 Failed to connect to PostgreSQL after multiple attempts")

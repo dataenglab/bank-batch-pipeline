@@ -15,5 +15,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Run the batch processor
-CMD ["python", "src/simple_batch.py"]
+# Run the enhanced processor
+CMD ["python", "src/enhanced_processor.py"]

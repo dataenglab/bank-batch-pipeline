@@ -1,60 +1,99 @@
-version: '3.8'
-
 services:
-  # Primary Database
+  batch-processor:
+    build:
+      context: .
+    working_dir: /app
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=bank_data
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password123
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=password123
+    depends_on:
+      - postgres
+      - minio
+    command: python src/final_working_processor.py
+
+  # PostgreSQL for processed data
   postgres:
     image: postgres:13
     environment:
-      POSTGRES_DB: bankdb
+      POSTGRES_DB: bank_data
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: password123
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  # Spark Master
-  spark-master:
-    image: bitnami/spark:latest
-    environment:
-      - SPARK_MODE=master
-      - SPARK_RPC_AUTHENTICATION_ENABLED=no
-      - SPARK_RPC_ENCRYPTION_ENABLED=no
-      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
-      - SPARK_SSL_ENABLED=no
+  # MinIO for raw data storage
+  minio:
+    image: minio/minio
     ports:
-      - "8080:8080"
-      - "7077:7077"
-
-  # Spark Worker
-  spark-worker:
-    image: bitnami/spark:latest
+      - "9000:9000"
+      - "9001:9001"
     environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_MEMORY=1G
-      - SPARK_WORKER_CORES=1
-      - SPARK_RPC_AUTHENTICATION_ENABLED=no
-      - SPARK_RPC_ENCRYPTION_ENABLED=no
-      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
-      - SPARK_SSL_ENABLED=no
-    depends_on:
-      - spark-master
-
-  # Data Ingestion Service
-  data-ingestion:
-    build: ./src/ingestion
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+    command: server /data --console-address ":9001"
     volumes:
-      - ./data:/app/data
-      - ./src/ingestion:/app
-    depends_on:
-      - postgres
+      - minio_data:/data
+
+  # ===== MONITORING STACK =====
+  
+  # Metrics Service (your custom metrics)
+  pipeline-metrics:
+    build:
+      context: ./monitoring
+    ports:
+      - "8000:8000"
     environment:
-      - DB_HOST=postgres
-      - DB_NAME=bankdb
-      - DB_USER=admin
-      - DB_PASSWORD=password
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    depends_on:
+      - pipeline-metrics
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./monitoring/grafana-dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
 
 volumes:
   postgres_data:
+  minio_data:
+  prometheus_data:
+  grafana_data:
