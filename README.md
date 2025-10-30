@@ -1,4 +1,4 @@
-# Batch Processing Data Architecture Portfolio
+# Batch Processing Data Architecture Pipeline
 
 ## Overview
 This is a batch-processing-based data architecture developed as a university portfolio project. The system ingests, processes, and aggregates large volumes of bank transaction data for quarterly machine learning model updates. The project features a microservices architecture with comprehensive data validation, error handling, and monitoring capabilities.
