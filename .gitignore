@@ -1,0 +1,15 @@
+# Data
+data/
+*.csv
+
+# Database
+postgres_data/
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# IDE
+.vscode/
+.idea/
