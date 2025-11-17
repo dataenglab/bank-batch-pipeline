@@ -68,15 +68,22 @@ Financial Data Sources (CSV/JSON)
 ## Quick Start
 
 ```bash
-# Clone repository
+# 1. Clone and start services
 git clone https://github.com/dataenglab/bank-batch-pipeline
 cd bank-batch-pipeline
-
-# Start complete system
 docker-compose up -d
 
-# Run processing pipeline
-python src/advanced_pipeline.py
+# 2. Check services (postgres, minio should be running)
+docker-compose ps
+
+# 3. Run the batch processor (it will run once and exit)
+docker-compose run --rm batch-processor
+
+# 4. Verify data was processed
+docker-compose exec postgres psql -U postgres -d bank_data -c "SELECT COUNT(*) FROM transactions;"
+
+# 5. Test the advanced pipeline (for demo purposes)
+docker-compose run --rm batch-processor python src/advanced_pipeline.py --quick-test
 ```
 
 ## Processing Schedule
