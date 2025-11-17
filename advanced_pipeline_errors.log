@@ -120,3 +120,100 @@
 2025-10-29 20:09:52,182 - error_handler - INFO - Retry 2 successful
 2025-10-29 20:09:52,182 - data_validator - INFO - Validation errors exported to demo_validation_errors.json
 2025-10-29 20:09:52,182 - error_handler - INFO - Error analysis exported to demo_error_analysis.json
+2025-11-16 02:01:43,256 - error_handler - ERROR - data_validation_error: Transaction TX0000 failed validation
+2025-11-16 02:01:43,258 - error_handler - WARNING - Data error - continuing processing: Transaction TX0000 failed validation
+2025-11-16 02:01:43,260 - error_handler - ERROR - processing_error: Failed to process transaction TX0001
+2025-11-16 02:01:43,260 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:44,346 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:44,346 - error_handler - ERROR - processing_error: Failed to process transaction TX0002
+2025-11-16 02:01:44,347 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:45,373 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:45,375 - error_handler - ERROR - processing_error: Failed to process transaction TX0003
+2025-11-16 02:01:45,375 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:46,473 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:46,473 - error_handler - ERROR - processing_error: Failed to process transaction TX0004
+2025-11-16 02:01:46,475 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:47,507 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:47,510 - error_handler - ERROR - data_validation_error: Transaction TX0005 failed validation
+2025-11-16 02:01:47,510 - error_handler - WARNING - Data error - continuing processing: Transaction TX0005 failed validation
+2025-11-16 02:01:47,511 - error_handler - ERROR - processing_error: Failed to process transaction TX0006
+2025-11-16 02:01:47,512 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:48,533 - error_handler - WARNING - Retry 1 failed: Database connection timeout
+2025-11-16 02:01:48,533 - error_handler - INFO - Retry 2/3 for processing_error after 2s
+2025-11-16 02:01:50,581 - error_handler - INFO - Retry 2 successful
+2025-11-16 02:01:50,582 - error_handler - ERROR - processing_error: Failed to process transaction TX0007
+2025-11-16 02:01:50,582 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:51,613 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:51,614 - error_handler - ERROR - processing_error: Failed to process transaction TX0008
+2025-11-16 02:01:51,614 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:52,663 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:52,665 - error_handler - ERROR - processing_error: Failed to process transaction TX0009
+2025-11-16 02:01:52,665 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:53,715 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:53,716 - error_handler - ERROR - data_validation_error: Transaction TX0010 failed validation
+2025-11-16 02:01:53,716 - error_handler - WARNING - Data error - continuing processing: Transaction TX0010 failed validation
+2025-11-16 02:01:53,717 - error_handler - ERROR - processing_error: Failed to process transaction TX0011
+2025-11-16 02:01:53,717 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:54,743 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:54,744 - error_handler - ERROR - processing_error: Failed to process transaction TX0012
+2025-11-16 02:01:54,744 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:55,771 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:55,773 - error_handler - ERROR - processing_error: Failed to process transaction TX0013
+2025-11-16 02:01:55,773 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:56,814 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:56,814 - error_handler - ERROR - processing_error: Failed to process transaction TX0014
+2025-11-16 02:01:56,814 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:57,869 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:57,869 - error_handler - ERROR - data_validation_error: Transaction TX0015 failed validation
+2025-11-16 02:01:57,869 - error_handler - WARNING - Data error - continuing processing: Transaction TX0015 failed validation
+2025-11-16 02:01:57,871 - error_handler - ERROR - processing_error: Failed to process transaction TX0016
+2025-11-16 02:01:57,871 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:58,910 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:58,910 - error_handler - ERROR - processing_error: Failed to process transaction TX0017
+2025-11-16 02:01:58,910 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:01:59,994 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:01:59,994 - error_handler - ERROR - processing_error: Failed to process transaction TX0018
+2025-11-16 02:01:59,994 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:01,046 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:02:01,048 - error_handler - ERROR - processing_error: Failed to process transaction TX0019
+2025-11-16 02:02:01,048 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:02,114 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:02:02,114 - error_handler - ERROR - data_validation_error: Transaction TX0020 failed validation
+2025-11-16 02:02:02,114 - error_handler - WARNING - Data error - continuing processing: Transaction TX0020 failed validation
+2025-11-16 02:02:02,116 - error_handler - ERROR - processing_error: Failed to process transaction TX0021
+2025-11-16 02:02:02,116 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:03,149 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:02:03,150 - error_handler - ERROR - processing_error: Failed to process transaction TX0022
+2025-11-16 02:02:03,150 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:04,235 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:02:04,235 - error_handler - ERROR - processing_error: Failed to process transaction TX0023
+2025-11-16 02:02:04,235 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:05,278 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:02:05,278 - error_handler - ERROR - processing_error: Failed to process transaction TX0024
+2025-11-16 02:02:05,278 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:06,361 - error_handler - WARNING - Retry 1 failed: Database connection timeout
+2025-11-16 02:02:06,361 - error_handler - INFO - Retry 2/3 for processing_error after 2s
+2025-11-16 02:02:08,420 - error_handler - INFO - Retry 2 successful
+2025-11-16 02:02:08,421 - error_handler - ERROR - data_validation_error: Transaction TX0025 failed validation
+2025-11-16 02:02:08,421 - error_handler - WARNING - Data error - continuing processing: Transaction TX0025 failed validation
+2025-11-16 02:02:08,421 - error_handler - ERROR - processing_error: Failed to process transaction TX0026
+2025-11-16 02:02:08,421 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:09,498 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:02:09,499 - error_handler - ERROR - processing_error: Failed to process transaction TX0027
+2025-11-16 02:02:09,500 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:10,515 - error_handler - WARNING - Retry 1 failed: API request timed out
+2025-11-16 02:02:10,515 - error_handler - INFO - Retry 2/3 for processing_error after 2s
+2025-11-16 02:02:12,602 - error_handler - INFO - Retry 2 successful
+2025-11-16 02:02:12,602 - error_handler - ERROR - processing_error: Failed to process transaction TX0028
+2025-11-16 02:02:12,602 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:13,640 - error_handler - WARNING - Retry 1 failed: Database connection timeout
+2025-11-16 02:02:13,640 - error_handler - INFO - Retry 2/3 for processing_error after 2s
+2025-11-16 02:02:15,679 - error_handler - INFO - Retry 2 successful
+2025-11-16 02:02:15,680 - error_handler - ERROR - processing_error: Failed to process transaction TX0029
+2025-11-16 02:02:15,680 - error_handler - INFO - Retry 1/3 for processing_error after 1s
+2025-11-16 02:02:16,711 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:02:16,711 - error_handler - ERROR - database_connection: Database operation failed
+2025-11-16 02:02:16,711 - error_handler - INFO - Retry 1/3 for database_connection after 1s
+2025-11-16 02:02:17,763 - error_handler - INFO - Retry 1 successful
+2025-11-16 02:02:17,764 - data_validator - INFO - Validation errors exported to demo_validation_errors.json
+2025-11-16 02:02:17,764 - error_handler - INFO - Error analysis exported to demo_error_analysis.json

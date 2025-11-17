@@ -5,22 +5,18 @@ import time
 import random
 import pandas as pd
 from datetime import datetime
-
 # Import your advanced features
 from data_validator import DataValidator
 from error_handler import ErrorHandler
-
 class AdvancedPipeline:
     def __init__(self):
         self.validator = DataValidator()
         self.error_handler = ErrorHandler('advanced_pipeline_errors.log')
         self.processed_count = 0
         self.start_time = time.time()
-    
     def generate_sample_data(self, count=20):
         """Generate sample transaction data for testing with more valid records"""
         sample_data = []
-        
         for i in range(count):
             # Create 80% valid, 20% invalid transactions
             if i % 5 == 0:  # 20% invalid
@@ -71,11 +67,8 @@ class AdvancedPipeline:
                     'currency': random.choice(['USD', 'EUR', 'GBP']),
                     'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 }
-            
             sample_data.append(transaction)
-        
         return sample_data
-    
     def _is_valid_timestamp(self, timestamp):
         """Validate timestamp is reasonable"""
         try:
@@ -85,7 +78,6 @@ class AdvancedPipeline:
             return ts.year >= 2020 and ts <= datetime.now()
         except:
             return False
-    
     def validate_single_transaction(self, transaction):
         """Validate a single transaction and return detailed results"""
         checks = {
@@ -95,9 +87,7 @@ class AdvancedPipeline:
             'reasonable_amount': transaction.get('amount', 0) <= 1000000,
             'valid_currency': transaction.get('currency') in ['USD', 'EUR', 'GBP']
         }
-        
         return all(checks.values()), checks
-    
     def process_single_transaction(self, transaction):
         """Process a single transaction with error handling"""
         # First, validate the transaction
@@ -114,13 +104,11 @@ class AdvancedPipeline:
                 }
             )
             return None
-        
         # Define the processing operation
         def process_operation():
             # Simulate processing work
             processing_time = random.uniform(0.01, 0.1)
             time.sleep(processing_time)
-            
             # Simulate occasional transient errors (10% chance)
             if random.random() < 0.1:
                 error_types = [
@@ -129,7 +117,6 @@ class AdvancedPipeline:
                     RuntimeError("Temporary processing failure")
                 ]
                 raise random.choice(error_types)
-            
             # Simulate successful processing
             processed_data = {
                 **transaction,
@@ -137,9 +124,7 @@ class AdvancedPipeline:
                 'processing_id': f'PROC{random.randint(1000, 9999)}',
                 'status': 'completed'
             }
-            
             return processed_data
-        
         # Execute with error handling
         try:
             result = self.error_handler.handle_error(
@@ -151,13 +136,11 @@ class AdvancedPipeline:
                 },
                 process_operation
             )
-            
             if result:
                 self.processed_count += 1
                 return result
             else:
                 return None
-                
         except Exception as e:
             self.error_handler.handle_error(
                 'unexpected_error',
@@ -168,60 +151,46 @@ class AdvancedPipeline:
                 }
             )
             return None
-    
     def process_transactions_batch(self, transactions):
         """Process a batch of transactions with comprehensive error handling"""
         print("=== ADVANCED PIPELINE PROCESSING ===")
         print(f"Processing {len(transactions)} transactions...")
-        
         successful_processing = []
         failed_processing = []
-        
         for i, transaction in enumerate(transactions, 1):
             print(f"Processing transaction {i}/{len(transactions)}: {transaction['transaction_id']}")
-            
             result = self.process_single_transaction(transaction)
-            
             if result:
                 successful_processing.append(result)
                 print(f"  SUCCESS: Processed {transaction['transaction_id']}")
             else:
                 failed_processing.append(transaction)
                 print(f"  FAILED: Could not process {transaction['transaction_id']}")
-        
         return successful_processing, failed_processing
-    
     def simulate_database_operation(self):
         """Simulate a database operation that might fail"""
         def db_operation():
             # Simulate database work
             time.sleep(0.05)
-            
             # 15% chance of database error
             if random.random() < 0.15:
                 raise ConnectionError("Database connection lost")
-            
             return "Database operation completed successfully"
-        
         return self.error_handler.handle_error(
             'database_connection',
             "Database operation failed",
             {'operation': 'batch_commit'},
             db_operation
         )
-    
     def generate_comprehensive_report(self, successful_transactions, failed_transactions):
         """Generate a comprehensive pipeline performance report"""
         processing_time = time.time() - self.start_time
         throughput = self.processed_count / processing_time if processing_time > 0 else 0
-        
         validation_report = self.validator.get_validation_report()
         error_report = self.error_handler.get_error_report()
-        
         # Calculate additional metrics
         total_transactions = len(successful_transactions) + len(failed_transactions)
         success_rate = len(successful_transactions) / total_transactions if total_transactions > 0 else 0
-        
         report = {
             'pipeline_summary': {
                 'total_transactions_processed': total_transactions,
@@ -252,37 +221,28 @@ class AdvancedPipeline:
                 'pipeline_efficiency': round(success_rate * 100, 2)
             }
         }
-        
         return report
-    
     def export_pipeline_report(self, report, filename='pipeline_performance_report.json'):
         """Export the comprehensive pipeline report to JSON"""
         import json
-        
         with open(filename, 'w') as f:
             json.dump(report, f, indent=2, default=str)
-        
         print(f"Pipeline performance report exported to {filename}")
         return filename
-    
     def run_complete_demo(self, transaction_count=25):
         """Run a complete demonstration of all advanced features working together"""
         print("STARTING ADVANCED PIPELINE DEMO")
         print("=" * 60)
-        
         # Step 1: Generate sample data
         print("\n1. GENERATING SAMPLE DATA")
         transactions = self.generate_sample_data(transaction_count)
         print(f"   Generated {len(transactions)} sample transactions")
         print(f"   Sample valid transaction: {transactions[1]}")
         print(f"   Sample invalid transaction: {transactions[0]}")
-        
         # Step 2: Process transactions with advanced features
         print("\n2. PROCESSING TRANSACTIONS")
         print("   Using advanced data validation and error handling...")
-        
         successful_transactions, failed_transactions = self.process_transactions_batch(transactions)
-        
         # Step 3: Simulate final database operation
         print("\n3. FINAL DATABASE OPERATION")
         db_result = self.simulate_database_operation()
@@ -290,20 +250,16 @@ class AdvancedPipeline:
             print(f"   Database operation: {db_result}")
         else:
             print("   Database operation failed after retries")
-        
         # Step 4: Generate comprehensive reports
         print("\n4. GENERATING REPORTS")
         report = self.generate_comprehensive_report(successful_transactions, failed_transactions)
-        
         # Export all reports
         self.validator.export_errors('demo_validation_errors.json')
         self.error_handler.export_error_report('demo_error_analysis.json')
         self.export_pipeline_report(report, 'pipeline_performance_report.json')
-        
         # Step 5: Display summary
         print("\n5. DEMONSTRATION SUMMARY")
         print("=" * 60)
-        
         # Pipeline Summary
         summary = report['pipeline_summary']
         print(f"\nPIPELINE PERFORMANCE:")
@@ -313,13 +269,11 @@ class AdvancedPipeline:
         print(f"  Success rate: {summary['success_rate']:.2%}")
         print(f"  Processing time: {summary['processing_time_seconds']}s")
         print(f"  Throughput: {summary['throughput_records_per_second']} records/sec")
-        
         # Data Quality
         quality = report['data_quality_metrics']
         print(f"\nDATA QUALITY:")
         print(f"  Validation success rate: {quality['validation_success_rate']:.2%}")
         print(f"  Validation errors: {quality['validation_errors']}")
-        
         # Error Handling
         errors = report['error_handling_metrics']
         print(f"\nERROR HANDLING:")
@@ -327,54 +281,42 @@ class AdvancedPipeline:
         print(f"  Unique error types: {errors['unique_error_types']}")
         print(f"  Retry attempts: {errors['total_retry_attempts']}")
         print(f"  Error handling success: {errors['error_handling_success_rate']:.2%}")
-        
         # Performance
         performance = report['performance_metrics']
         print(f"\nPERFORMANCE METRICS:")
         print(f"  Avg processing time: {performance['average_processing_time_per_record']}s/record")
         print(f"  Pipeline efficiency: {performance['pipeline_efficiency']}%")
-        
         # File exports
         print(f"\nEXPORTED REPORTS:")
         print(f"  - demo_validation_errors.json (Data validation details)")
         print(f"  - demo_error_analysis.json (Error handling analysis)")
         print(f"  - pipeline_performance_report.json (Comprehensive metrics)")
         print(f"  - advanced_pipeline_errors.log (Detailed error log)")
-        
         print("\n" + "=" * 60)
         print("ADVANCED PIPELINE DEMONSTRATION COMPLETED SUCCESSFULLY!")
         print("=" * 60)
-        
         return report, successful_transactions, failed_transactions
-
 def main():
     """Main function to run the advanced pipeline demonstration"""
     try:
         # Initialize the advanced pipeline
         pipeline = AdvancedPipeline()
-        
         # Run the complete demonstration
         report, successful, failed = pipeline.run_complete_demo(30)
-        
         # Display sample of successful processing
         if successful:
             print(f"\nSAMPLE SUCCESSFUL PROCESSING RESULT:")
             sample_result = successful[0]
             for key, value in sample_result.items():
                 print(f"  {key}: {value}")
-        
         return True
-        
     except Exception as e:
         print(f"Pipeline demonstration failed: {str(e)}")
         return False
-
 if __name__ == '__main__':
     success = main()
   # Replace the last few lines in advanced_pipeline.py:
-if success:
     print("\nAdvanced pipeline demonstration completed successfully!")
 else:
     print("\nAdvanced pipeline demonstration failed.")
-
 print("\nThank you for using the Advanced Data Pipeline!")

@@ -4,9 +4,9 @@
     "successful_transactions": 24,
     "failed_transactions": 6,
     "success_rate": 0.8,
-    "processing_time_seconds": 32.72,
-    "throughput_records_per_second": 0.73,
-    "completion_time": "2025-10-29T20:09:52.182517",
+    "processing_time_seconds": 34.52,
+    "throughput_records_per_second": 0.7,
+    "completion_time": "2025-11-16T02:02:17.763970",
     "pipeline_version": "1.0"
   },
   "data_quality_metrics": {
@@ -18,7 +18,7 @@
   "error_handling_metrics": {
     "total_errors_handled": 31,
     "unique_error_types": 3,
-    "total_retry_attempts": 3,
+    "total_retry_attempts": 4,
     "error_handling_success_rate": 1.0,
     "error_type_breakdown": {
       "data_validation_error": 6,
@@ -27,8 +27,8 @@
     }
   },
   "performance_metrics": {
-    "average_processing_time_per_record": 1.0905,
-    "records_processed_per_second": 0.73,
+    "average_processing_time_per_record": 1.1508,
+    "records_processed_per_second": 0.7,
     "pipeline_efficiency": 80.0
   }
 }

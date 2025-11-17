@@ -145,4 +145,4 @@ if __name__ == "__main__":
         create_tables()
         ingest_data()
     else:
-        logger.error("💥 Failed to connect to PostgreSQL after multiple attempts")
+        logger.error(" Failed to connect to PostgreSQL after multiple attempts")
