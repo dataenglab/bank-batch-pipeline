@@ -29,11 +29,11 @@ Financial Data Sources (CSV/JSON)
 - Python Batch Processor (runs processing jobs on demand)
   
 ## Service Access
-Grafana: http://localhost:3000 (admin/admin)
-Prometheus: http://localhost:9090
-Custom Metrics: http://localhost:8000/metrics
-MinIO: http://localhost:9000 (admin/password123)
-PostgreSQL: localhost:5432 (admin/password123)
+- **Grafana**: http://localhost:3000 (admin/admin)
+- **Prometheus**: http://localhost:9090
+- **Custom Metrics**: http://localhost:8000/metrics
+- **MinIO**: http://localhost:9000 (admin/password123)
+- **PostgreSQL**: localhost:5432 (admin/password123)
 
 *Note: Default credentials for development/evaluation. Use strong passwords in production.*
 
