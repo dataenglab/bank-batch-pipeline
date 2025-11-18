@@ -28,12 +28,23 @@ Financial Data Sources (CSV/JSON)
 **On-Demand Service (1):**
 - Python Batch Processor (runs processing jobs on demand)
   
-### Service Access
-- **Grafana**: http://localhost:3000 (admin/admin)
-- **Prometheus**: http://localhost:9090
-- **Custom Metrics**: http://localhost:8000/metrics
-- **MinIO**: http://localhost:9000 (admin/password123)
-- **PostgreSQL**: localhost:5432 (admin/password123)
+## Service Access
+Grafana: http://localhost:3000 (admin/admin)
+Prometheus: http://localhost:9090
+Custom Metrics: http://localhost:8000/metrics
+MinIO: http://localhost:9000 (admin/password123)
+PostgreSQL: localhost:5432 (admin/password123)
+
+*Note: Default credentials for development/evaluation. Use strong passwords in production.*
+
+## Real-Time Monitoring  
+Operational Grafana dashboards provide real-time pipeline visibility:
+- **Throughput Tracking**: 1.5-3.5 records/second (`dashboard-throughput.png`)
+- **System Health**: CPU, memory, and file descriptor monitoring (`dashboard-system-health.png`)
+- **Data Source Verification**: Grafana-Prometheus connectivity (`grafana-datasource-working.png`)
+- **Metrics Collection**: Successful pipeline metrics scraping (`prometheus-targets-up.png`)
+
+**Evidence**: See `monitoring/screenshots/` for operational dashboard screenshots.
   
 ## Key Features
 
@@ -92,7 +103,7 @@ docker-compose ps
 docker-compose run --rm batch-processor
 
 # 4. Verify data was processed
-docker-compose exec postgres psql -U postgres -d bank_data -c "SELECT COUNT(*) FROM transactions;"
+docker-compose exec postgres psql -U admin -d bank_data -c "SELECT COUNT(*) FROM transactions;"
 
 # 5. Test the advanced pipeline (for demo purposes)
 docker-compose run --rm batch-processor python src/advanced_pipeline.py --quick-test
