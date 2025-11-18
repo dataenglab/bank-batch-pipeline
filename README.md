@@ -17,12 +17,24 @@ Financial Data Sources (CSV/JSON)
 [Machine Learning Application] → Quarterly Model Updates
 
 
-### Microservices Architecture
-- **Python Batch Processor**: Handles data ingestion, preprocessing & aggregation (4,000-5,000 records/sec)
-- **PostgreSQL Microservice**: ACID-compliant database with indexing and partitioning
-- **MinIO Microservice**: S3-compatible object storage for files and artifacts
-- **Data Delivery Exporter**: Generates curated datasets for ML consumption
+### Microservices (6 Services Total)
+**Always-Running Services (5):**
+- PostgreSQL Database with ACID compliance
+- MinIO Object Storage (S3-compatible)  
+- Custom Metrics Server (Prometheus-compatible)
+- Prometheus Monitoring Collection
+- Grafana Visualization Dashboards
 
+**On-Demand Service (1):**
+- Python Batch Processor (runs processing jobs on demand)
+  
+### Service Access
+- **Grafana**: http://localhost:3000 (admin/admin)
+- **Prometheus**: http://localhost:9090
+- **Custom Metrics**: http://localhost:8000/metrics
+- **MinIO**: http://localhost:9000 (admin/password123)
+- **PostgreSQL**: localhost:5432 (admin/password123)
+  
 ## Key Features
 
 ### High-Performance Processing
@@ -99,10 +111,14 @@ docker-compose run --rm batch-processor python src/advanced_pipeline.py --quick-
 
 ## Repository Structure:
 **bank-batch-pipeline/**
-- **src/**                     - Python microservices
-- **docker-compose.yml**       - Infrastructure as Code
-- **tests/**                   - Validation and unit tests
-- **documentation/**           - Architecture and setup guides
+- **src/**                     - Core Python microservices & processors
+- **monitoring/**              - Complete observability stack (Prometheus + Grafana + metrics)
+- **data/**                    - Transaction datasets (1.8M+ records)
+- **database/**                - PostgreSQL initialization & schemas
+- **docker-compose.yml**       - Microservices Infrastructure as Code (6 services)
+- **evidence files/**          - Performance reports & error logs
+- **requirements.txt**         - Python dependencies
+- **env**                      - Environment configuration
 
 ## Use Case
 Financial Transaction Analysis: Processing large-scale bank transaction data for machine learning model training, featuring quarterly updates with comprehensive data quality assurance.
